@@ -5,9 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\models\Libros;
 use app\models\LibrosSearch;
+use app\models\Prestaciones;
+use app\models\Socios;
+use app\models\PrestarLibroForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+
 
 /**
  * LibrosController implements the CRUD actions for Libros model.
@@ -55,6 +60,28 @@ class LibrosController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionPrestar()
+    {
+        $datos = [];
+
+        $datos['modelo'] = new PrestarLibroForm();
+        $datos['confirmacion'] = false;
+
+        if ($datos['modelo']->load(Yii::$app->request->post())&& $datos['modelo']->validate()) {
+            $prestaciones = new Prestaciones();
+            $prestaciones->socio_id = Socios::findOne(['numero'=>$datos['modelo']->numero])
+                ->id;
+            $prestaciones->libro_id = Libros::findOne(['codigo'=>$datos['modelo']->codigo])
+                ->id;
+            if ($prestaciones->save()) {
+                $datos['confirmacion'] = true;
+            }
+            $this->redirect(['prestar']);
+        }
+
+        return $this->render('prestar', $datos);
     }
 
     /**
