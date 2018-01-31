@@ -51,6 +51,7 @@ $config = [
         'formatter' => [
             'timeZone' => 'Europe/Madrid',
         ],
+
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
