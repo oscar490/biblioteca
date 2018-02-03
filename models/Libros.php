@@ -53,6 +53,15 @@ class Libros extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getEstaPrestado()
+    {
+        $prestaciones = $this->getPrestaciones()
+            ->where(['devolucion'=>null])
+            ->all();
+
+        return empty($prestaciones) ? false : true;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
