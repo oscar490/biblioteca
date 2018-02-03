@@ -22,7 +22,7 @@ CREATE TABLE socios
 (
       id        BIGSERIAL    PRIMARY KEY
     , numero    NUMERIC(5,0) UNIQUE NOT NULL
-    , nombre    VARCHAR(255) UNIQUE NOT NULL
+    , nombre    VARCHAR(255) 
     , direccion VARCHAR(255)
     , telefono  NUMERIC(9,0) CONSTRAINT ck_numeros_positivos CHECK
                                 (telefono > 0)
