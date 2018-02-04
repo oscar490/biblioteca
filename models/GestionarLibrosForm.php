@@ -18,7 +18,20 @@ class GestionarLibrosForm extends Model
                 'exist',
                 'targetClass' => Libros::className(),
                 'targetAttribute' => ['codigo' => 'codigo'],
+                'message' => 'No existe un libro con ese código',
             ],
         ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'codigo' => 'Código del libro:',
+        ];
+    }
+
+    public function formName()
+    {
+        return '';
     }
 }

@@ -24,6 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Gestionar', ['prestaciones/gestionar', 'numero'=>$model->numero], [
+            'class'=>'btn btn-success',
+        ]) ?>
     </p>
 
     <?= DetailView::widget([
@@ -37,13 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <?= GridView::widget([
-        'dataProvider'=>$dataProvider,
-        'columns'=> [
-            'libro.codigo',
-            'libro.titulo',
-            'libro.num_pags',
-        ]
-    ]) ?>
+
 
 </div>

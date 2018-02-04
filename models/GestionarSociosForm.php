@@ -12,11 +12,23 @@ class GestionarSociosForm extends Model
     {
         return [
             [['numero'], 'required'],
-            [['numero'], 'integer'],
+            [
+                'numero', function ($attribute, $params, $validator) {
+                    if (!ctype_digit($this->numero)) {
+                        if (Socios::findOne(['nombre' => $this->numero]) !== null) {
+                            $this->numero = Socios::findOne(['nombre' => $this->numero])
+                                ->numero;
+                        } else {
+                            $this->addError($attribute, 'No existe ese socio');
+                        }
+                    }
+                },
+            ],
             [
                 ['numero'],
                 'exist',
                 'targetClass' => Socios::className(),
+                'skipOnError' => true,
                 'targetAttribute' => ['numero' => 'numero'],
                 'message' => 'No existe ningún socio con ese número',
             ],
@@ -26,5 +38,12 @@ class GestionarSociosForm extends Model
     public function formName()
     {
         return '';
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'numero' => 'Número de socio:',
+        ];
     }
 }

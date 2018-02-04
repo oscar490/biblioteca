@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\GestionarLibrosForm;
 use app\models\GestionarSociosForm;
+use app\models\Libros;
 use app\models\Prestaciones;
 use app\models\PrestacionesSearch;
 use app\models\Socios;
@@ -48,12 +49,14 @@ class PrestacionesController extends Controller
         ]);
     }
 
-    public function actionGestionar($numero = null)
+    public function actionGestionar($numero = null, $codigo = null)
     {
         $modelSocio = new GestionarSociosForm([
             'numero' => $numero,
         ]);
-        $modelLibro = new GestionarLibrosForm();
+        $modelLibro = new GestionarLibrosForm([
+            'codigo' => $codigo,
+        ]);
         $datos = [];
         if ($numero !== null && $modelSocio->validate()) {
             $datos['socio'] = Socios::findOne(['numero' => $modelSocio->numero]);
@@ -68,6 +71,10 @@ class PrestacionesController extends Controller
                 'pagination' => false,
             ]);
             $datos['dataProvider'] = $dataProvider;
+
+            if ($codigo !== null && $modelLibro->validate()) {
+                $datos['libro'] = Libros::findOne(['codigo' => $codigo]);
+            }
         }
         $datos['modelSocio'] = $modelSocio;
         $datos['modelLibro'] = $modelLibro;
@@ -86,6 +93,20 @@ class PrestacionesController extends Controller
                 'numero' => $prestamo->socio->numero,
             ]
         );
+    }
+
+    public function actionPrestar($numero)
+    {
+        $codigo = Yii::$app->request->post('codigo');
+        $socio = Socios::findOne(['numero' => $numero]);
+        $libro = Libros::findOne(['codigo' => $codigo]);
+        $prestacion = new Prestaciones([
+            'socio_id' => $socio->id,
+            'libro_id' => $libro->id,
+        ]);
+        $prestacion->save();
+
+        $this->redirect(['prestaciones/gestionar', 'numero' => $numero]);
     }
 
     /**
