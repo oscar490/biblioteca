@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "libros".
@@ -56,7 +56,7 @@ class Libros extends \yii\db\ActiveRecord
     public function getEstaPrestado()
     {
         $prestaciones = $this->getPrestaciones()
-            ->where(['devolucion'=>null])
+            ->where(['devolucion' => null])
             ->all();
 
         return empty($prestaciones) ? false : true;
@@ -68,5 +68,10 @@ class Libros extends \yii\db\ActiveRecord
     public function getPrestaciones()
     {
         return $this->hasMany(Prestaciones::className(), ['libro_id' => 'id'])->inverseOf('libro');
+    }
+
+    public function getEnlace()
+    {
+        return Html::a($this->titulo, ['libros/view', 'id' => $this->id]);
     }
 }

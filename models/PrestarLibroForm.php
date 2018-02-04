@@ -3,7 +3,6 @@
 namespace app\models;
 
 use yii\base\Model;
-use app\models\Socios;
 
 class PrestarLibroForm extends Model
 {
@@ -19,23 +18,22 @@ class PrestarLibroForm extends Model
             [
                 ['numero'],
                 'exist',
-                'targetClass'=>Socios::className(),
-                'targetAttribute'=>['numero'=>'numero'],
+                'targetClass' => Socios::className(),
+                'targetAttribute' => ['numero' => 'numero'],
             ],
 
             [
                 ['codigo'],
                 'exist',
-                'targetClass'=>Libros::className(),
-                'targetAttribute'=>['codigo'=>'codigo'],
+                'targetClass' => Libros::className(),
+                'targetAttribute' => ['codigo' => 'codigo'],
             ],
             [
                 'codigo', function ($attribute, $params, $validator) {
-                    if (Libros::findOne(['codigo'=>$this->codigo])->estaPrestado) {
+                    if (Libros::findOne(['codigo' => $this->codigo])->estaPrestado) {
                         $this->addError($attribute, 'El libro está prestado');
                     }
-                }],
-
+                }, ],
         ];
     }
 }

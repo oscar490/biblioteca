@@ -2,11 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\grid\DataColumn;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Libros */
 
-$this->title = $model->id;
+$this->title = $model->titulo;
 $this->params['breadcrumbs'][] = ['label' => 'Libros', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -23,17 +25,41 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+
             'codigo',
             'titulo',
             'num_pags',
             'autor',
         ],
+    ]) ?>
+
+    <hr>
+
+    <h3>Últimos prestamos</h3>
+    <?= GridView::widget([
+        'dataProvider'=>$dataProvider,
+        'columns' => [
+            'socio.numero',
+            [
+                'label'=>'Nombre',
+                'attribute'=>'socio.enlace',
+                'format'=>'html',
+            ],
+            // 'create_at:dateTime',
+            [
+                'attribute'=>'create_at',
+                'format'=>'dateTime',
+                'label'=>'Fecha de prestamo',
+            ],
+            'devolucion:dateTime',
+        ]
+
     ]) ?>
 
 </div>
