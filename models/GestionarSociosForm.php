@@ -22,4 +22,9 @@ class GestionarSociosForm extends Model
             ],
         ];
     }
+
+    public function formName()
+    {
+        return '';
+    }
 }

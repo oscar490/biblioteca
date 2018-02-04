@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use yii\grid\ActionColumn;
 use yii\helpers\Html;
@@ -9,15 +10,18 @@ $this->params['breadcrumbs'][] = 'Gestionar';
 
 ?>
 <h1><?= $this->title ?></h1>
-<?php $form = ActiveForm::begin() ?>
+<?php $form = ActiveForm::begin([
+    'method'=>'get',
+    'action'=>['prestaciones/gestionar'],
+    ]) ?>
 
-    <?= $form->field($model, 'numero') ?>
+    <?= $form->field($modelSocio, 'numero') ?>
     <?= Html::submitButton('Buscar socio', ['class'=>'btn btn-success']) ?>
 
 <?php ActiveForm::end() ?>
 
 <?php if (isset($socio)): ?>
-    <h2>Libros prestados a <?= $socio->nombre ?></h2>
+    <h3>Libros prestados a <?= $socio->nombre ?></h3>
 
     <?= GridView::widget([
         'dataProvider'=>$dataProvider,
@@ -37,16 +41,12 @@ $this->params['breadcrumbs'][] = 'Gestionar';
                 'header'=>'Acciones',
                 'buttons'=>[
                     'devolver'=> function ($url, $model, $key) {
-                        return Html::a(
-                            'Devolver',
-                            [
-                                'prestamos/devolver'
-                            ],
-                            [
-                                'data-method'=>'post',
-                                'class'=>'btn-xs     btn-danger'
-                            ]
-                        );
+                        return Html::beginForm(
+                            ['prestaciones/devolver',
+                            'id'=>$model->id],'post') .
+                            Html::submitButton('Devolver', [
+                                'class'=>'btn-xs btn-danger'
+                            ]) . Html::endForm();
                     }
                 ]
             ]
@@ -54,4 +54,9 @@ $this->params['breadcrumbs'][] = 'Gestionar';
         ],
 
     ]) ?>
+    <?php $form = ActiveForm::begin() ?>
+        <?= $form->field($modelLibro, 'codigo') ?>
+        <?= Html::submitButton('Buscar libro', ['class'=>'btn btn-success']) ?>
+    <?php ActiveForm::end() ?>
+
 <?php endif ?>

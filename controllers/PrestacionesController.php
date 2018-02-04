@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\GestionarLibrosForm;
 use app\models\GestionarSociosForm;
 use app\models\Prestaciones;
 use app\models\PrestacionesSearch;
@@ -47,12 +48,15 @@ class PrestacionesController extends Controller
         ]);
     }
 
-    public function actionGestionar()
+    public function actionGestionar($numero = null)
     {
-        $model = new GestionarSociosForm();
+        $modelSocio = new GestionarSociosForm([
+            'numero' => $numero,
+        ]);
+        $modelLibro = new GestionarLibrosForm();
         $datos = [];
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $datos['socio'] = Socios::findOne(['numero' => $model->numero]);
+        if ($numero !== null && $modelSocio->validate()) {
+            $datos['socio'] = Socios::findOne(['numero' => $modelSocio->numero]);
             $prestaciones = $datos['socio']
                 ->getPrestaciones()
                 ->where(['devolucion' => null])
@@ -65,8 +69,23 @@ class PrestacionesController extends Controller
             ]);
             $datos['dataProvider'] = $dataProvider;
         }
-        $datos['model'] = $model;
+        $datos['modelSocio'] = $modelSocio;
+        $datos['modelLibro'] = $modelLibro;
         return $this->render('gestionar', $datos);
+    }
+
+    public function actionDevolver($id)
+    {
+        $prestamo = Prestaciones::findOne(['id' => $id]);
+        $prestamo->devolucion = date('Y-m-d H:i:s');
+        $prestamo->save();
+
+        $this->redirect(
+            [
+                'prestaciones/gestionar',
+                'numero' => $prestamo->socio->numero,
+            ]
+        );
     }
 
     /**
