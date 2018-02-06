@@ -42,7 +42,9 @@ class PrestacionesController extends Controller
     {
         $searchModel = new PrestacionesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination = [
+            'pageSize' => 5,
+        ];
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -73,7 +75,7 @@ class PrestacionesController extends Controller
             $datos['dataProvider'] = $dataProvider;
 
             if ($codigo !== null && $modelLibro->validate()) {
-                $datos['libro'] = Libros::findOne(['codigo' => $codigo]);
+                $datos['libro'] = Libros::findOne(['codigo' => $modelLibro->codigo]);
             }
         }
         $datos['modelSocio'] = $modelSocio;

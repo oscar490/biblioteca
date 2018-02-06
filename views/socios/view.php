@@ -1,6 +1,7 @@
 <?php
 
 use yii\grid\GridView;
+
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -24,22 +25,54 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <?= Html::a('Gestionar', ['prestaciones/gestionar', 'numero'=>$model->numero], [
-            'class'=>'btn btn-success',
-        ]) ?>
+        <?= Html::a('Gestionar',['prestaciones/gestionar', 'numero'=>$model->numero], [
+            'class'=>'btn btn-default',
+        ])?>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            // 'id',
+            'id',
             'numero',
             'nombre',
             'direccion',
             'telefono',
         ],
     ]) ?>
+    <h3>Últimos prestamos</h3>
+    <?= GridView::widget([
+        'dataProvider'=>$dataProvider,
+        'columns'=>[
+            'libro.codigo',
+            [
+                'attribute'=>'libro.enlace',
+                'format'=>'html',
+                'label'=>'Título',
+            ],
+            [
+                'attribute'=>'create_at',
+                'format'=>'dateTime',
+                'label'=>'Fecha de prestamo',
+            ],
+            'devolucion:dateTime',
+            [
+                'class'=>'yii\grid\ActionColumn',
+                'template'=>'{devolver}',
+                'buttons'=> [
+                    'devolver'=>function ($url, $model, $key) {
 
+                        if ($model->devolucion === null) {
+                            return Html::beginForm([
+                                'prestaciones/devolver', 'id'=>$model->id]
 
+                            ) . Html::submitButton('Devolver', ['class'=>'btn-xs btn-danger'])
+                            . Html::endForm();
+                        }
+                    }
+                ]
+            ],
+        ]
+    ]) ?>
 
 </div>

@@ -13,16 +13,7 @@ class GestionarSociosForm extends Model
         return [
             [['numero'], 'required'],
             [
-                'numero', function ($attribute, $params, $validator) {
-                    if (!ctype_digit($this->numero)) {
-                        if (Socios::findOne(['nombre' => $this->numero]) !== null) {
-                            $this->numero = Socios::findOne(['nombre' => $this->numero])
-                                ->numero;
-                        } else {
-                            $this->addError($attribute, 'No existe ese socio');
-                        }
-                    }
-                },
+                'numero', 'buscarSocio'
             ],
             [
                 ['numero'],
@@ -33,6 +24,22 @@ class GestionarSociosForm extends Model
                 'message' => 'No existe ningún socio con ese número',
             ],
         ];
+    }
+
+    public function buscarSocio($attribute, $params, $validator)
+    {
+        if (!ctype_digit($this->numero)) {
+            $cadena = mb_strtolower($this->numero);
+            $socioBuscar = Socios::find()
+                ->where(['like', 'lower(nombre)', $cadena])
+                ->one();
+
+            if ($socioBuscar !== null) {
+                $this->numero = $socioBuscar->numero;
+            } else {
+                $this->addError($attribute, 'No existe ese socio');
+            }
+        }
     }
 
     public function formName()

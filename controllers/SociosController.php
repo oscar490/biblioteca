@@ -54,13 +54,30 @@ class SociosController extends Controller
      */
     public function actionView($id)
     {
-        $prestaciones = Prestaciones::findOne(['socio_id' => $id]);
-
+        $prestaciones = Prestaciones::find()
+            ->where(['socio_id'=>$id])
+            ->joinWith('libro')
+            // ->orderBy(['create_at'=>SORT_DESC])
+            ->limit(5);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $prestaciones,
-            'pagination' => false,
-            'sort' => false,
+            'pagination' => [
+                'pageSize'=> '5',
+            ],
+            'sort' => [
+                'attributes'=>[
+                    'libro.enlace'=> [
+                        'asc'=>['titulo'=>SORT_ASC],
+                        'desc'=>['titulo'=>SORT_DESC],
+                        'default'=>SORT_DESC,
+                    ],
+                    'libro.codigo'=> [
+                        'asc'=>['codigo'=>SORT_ASC],
+                        'desc'=>['codigo'=>SORT_DESC],
+                    ]
+                ]
+            ],
         ]);
         return $this->render('view', [
             'model' => $this->findModel($id),

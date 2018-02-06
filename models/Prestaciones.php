@@ -47,7 +47,7 @@ class Prestaciones extends \yii\db\ActiveRecord
             'id' => 'ID',
             'libro_id' => 'Libro ID',
             'socio_id' => 'Socio ID',
-            'create_at::dateTime' => 'Fecha de prestación',
+            'create_at' => 'Fecha de prestación',
             'devolucion' => 'Devolucion',
         ];
     }
