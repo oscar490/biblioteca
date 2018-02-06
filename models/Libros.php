@@ -70,6 +70,12 @@ class Libros extends \yii\db\ActiveRecord
         return $this->hasMany(Prestaciones::className(), ['libro_id' => 'id'])->inverseOf('libro');
     }
 
+    public function getSocio()
+    {
+        return $this->hasMany(Socios::className(), ['id'=>'socio_id'])
+            ->via('prestaciones');
+    }
+
     public function getEnlace()
     {
         return Html::a($this->titulo, ['libros/view', 'id' => $this->id]);
