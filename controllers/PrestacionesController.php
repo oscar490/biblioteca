@@ -42,9 +42,7 @@ class PrestacionesController extends Controller
     {
         $searchModel = new PrestacionesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->pagination = [
-            'pageSize' => 5,
-        ];
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

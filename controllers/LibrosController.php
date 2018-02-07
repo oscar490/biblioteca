@@ -57,14 +57,18 @@ class LibrosController extends Controller
     public function actionView($id)
     {
         $prestaciones = Prestaciones::find()
-            ->where(['libro_id' => $id])
-            ->orderBy(['create_at' => SORT_DESC])
-            ->limit(10);
+            ->where(['libro_id' => $id]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $prestaciones,
-            'sort' => false,
-            'pagination' => false,
+            'pagination' => [
+                'pageSize' => '5',
+            ],
+            'sort' => [
+                'defaultOrder' => ['create_at' => SORT_DESC],
+                ],
         ]);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'dataProvider' => $dataProvider,
