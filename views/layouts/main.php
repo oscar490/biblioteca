@@ -25,7 +25,18 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
+<?php
+    $items = [];
+    if (Yii::$app->user->isGuest) {
+        $items[] = ['label'=>'Iniciar sesión','url'=>['site/login']];
+        $items[] = ['label'=>'Resgistrase','url'=>['usuarios/create']];
 
+    } else {
+        $items[] = ['label'=>'Cerrar sesión','url'=>['/site/logout'], 'linkOptions'=>['data-method'=>'POST'],];
+        $items[] = ['label'=>'Modificar datos','url'=>['usuarios/update']];
+    }
+
+?>
 <div class="wrap">
     <?php
     NavBar::begin([
@@ -45,18 +56,26 @@ AppAsset::register($this);
             ['label' => 'Socios', 'url' => ['socios/index']],
             ['label' => 'Prestaciones', 'url' => ['/prestaciones/index']],
             ['label' => 'Contacto', 'url' => ['/site/contact']],
+
+
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label'=>'Usuario', 'items'=>$items]
             ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+                ['label'=>Yii::$app->user->identity->nombre, 'items'=>$items]
             )
+
+            // Yii::$app->user->isGuest ? (
+            //     ['label' => 'Iniciar sesión', 'url' => ['/site/login']]
+            // ) : (
+            //     '<li>'
+            //     . Html::beginForm(['/site/logout'], 'post')
+            //     . Html::submitButton(
+            //         'Logout (' . Yii::$app->user->identity->nombre . ')',
+            //         ['class' => 'btn btn-link logout']
+            //     )
+            //     . Html::endForm()
+            //     . '</li>'
+            // )
         ],
     ]);
     NavBar::end();

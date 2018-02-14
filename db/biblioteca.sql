@@ -1,6 +1,21 @@
 ------------------------------
 -- Archivo de base de datos --
 ------------------------------
+DROP TABLE IF EXISTS usuarios CASCADE;
+
+CREATE TABLE usuarios
+(
+      id       BIGSERIAL    PRIMARY KEY
+    , nombre   VARCHAR(255) UNIQUE NOT NULL
+    , password VARCHAR(255) NOT NULL
+    , correo   VARCHAR(255)
+);
+
+CREATE INDEX idx_usuarios_correo ON usuarios (correo);
+
+INSERT INTO usuarios (nombre, password, correo)
+    VALUES ('pepe', crypt('pepe', gen_salt('bf', 13)), 'pepe@gmail.com'),
+            ('juan', crypt('juan', gen_salt('bf', 13)), 'juan@gmail.com');
 
 
 DROP TABLE IF EXISTS libros CASCADE;
@@ -22,7 +37,7 @@ CREATE TABLE socios
 (
       id        BIGSERIAL    PRIMARY KEY
     , numero    NUMERIC(5,0) UNIQUE NOT NULL
-    , nombre    VARCHAR(255) 
+    , nombre    VARCHAR(255)
     , direccion VARCHAR(255)
     , telefono  NUMERIC(9,0) CONSTRAINT ck_numeros_positivos CHECK
                                 (telefono > 0)
